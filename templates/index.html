@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Analyzer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+            background-color: #f4f7f9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 12px;
+            width: 80%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #0056b3; }
+
+        /* Strength Colors */
+        .Strong { color: #28a745; font-weight: bold; }
+        .Moderate { color: #fd7e14; font-weight: bold; }
+        .Weak { color: #dc3545; font-weight: bold; }
+
+        .warning-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ffeeba;
+            margin-bottom: 20px;
+        }
+        .suggestion {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 6px;
+        }
+        ul { text-align: left; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Password Analyzer</h2>
+
+    {% if warning %}
+        <div class="warning-box">
+            <strong>{{ warning }}</strong>
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="password" placeholder="Enter password to test..." required autocomplete="off">
+        <br>
+        <button type="submit">Analyze Strength</button>
+    </form>
+
+    {% if result %}
+        <hr>
+        <h3>Strength: <span class="{{ result.strength }}">{{ result.strength }}</span></h3>
+
+        {% if result.checks %}
+            <ul>
+                {% if not result.checks.length %}<li>❌ Use at least 10 characters</li>{% endif %}
+                {% if not result.checks.upper %}<li>❌ Add an uppercase letter</li>{% endif %}
+                {% if not result.checks.lower %}<li>❌ Add a lowercase letter</li>{% endif %}
+                {% if not result.checks.digit %}<li>❌ Include a number</li>{% endif %}
+                {% if not result.checks.special %}<li>❌ Include a special character (!@#$)</li>{% endif %}
+            </ul>
+        {% endif %}
+
+        {% if suggestion %}
+            <div class="suggestion">
+                <p>Recommended alternative:</p>
+                <code><strong>{{ suggestion }}</strong></code>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>
